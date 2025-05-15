@@ -4,6 +4,7 @@ import (
 	"context"
 	"copybara/notifications"
 	"copybara/utils"
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -47,8 +48,10 @@ func Init() {
 		}
 		c.String(http.StatusOK, fmt.Sprintf("OK"))
 	})
-	err := os.Remove(socketName)
-	utils.CheckError(err)
+	if _, err := os.Stat(socketName); errors.Is(err, os.ErrNotExist) {
+		err := os.Remove(socketName)
+		utils.CheckError(err)
+	}
 	listener, err := net.Listen("unix", socketName)
 	utils.CheckError(err)
 
