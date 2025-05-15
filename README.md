@@ -5,7 +5,7 @@ A **Wayland** clipboard automation tool for cleaning URLs by removing tracking q
 ## Features
  - Remove tracking in URLs
  - Custom regex rules
- - (Soon: ability to toggle automations)
+ - (Soon: ability to toggle automations with [IPC](https://pkg.go.dev/github.com/james-barrow/golang-ipc))
  - More to come
 
 
