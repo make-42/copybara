@@ -5,12 +5,11 @@ import (
 	"copybara/config"
 	"copybara/regex"
 	"copybara/urlclean"
+	"copybara/utils"
 	"fmt"
 	"os/exec"
 	"sync"
 	"time"
-
-	"github.com/tiagomelo/go-clipboard/clipboard"
 
 	notify "github.com/TheCreeper/go-notify"
 )
@@ -39,7 +38,6 @@ func (c *SafeText) Value() string {
 }
 
 func ListenerThread() {
-	c := clipboard.New()
 	cmd := exec.Command("wl-paste", "-w", "echo", "new")
 
 	stdout, _ := cmd.StdoutPipe()
@@ -48,10 +46,9 @@ func ListenerThread() {
 	scanner := bufio.NewScanner(stdout)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
-		text, err := c.PasteText()
-		if err != nil {
-			continue
-		}
+		textBytes, err := exec.Command("wl-paste").Output()
+		text := string(textBytes)
+		utils.CheckError(err)
 		if text != OldText.Value() {
 			OldText.Set(text)
 			newText := text
@@ -65,7 +62,9 @@ func ListenerThread() {
 			}
 			OldText.Set(newText)
 			if urlCleaned || regexReplaced {
-				c.CopyText(newText)
+				err := exec.Command("wl-copy", newText).Run()
+				utils.CheckError(err)
+				text := string(textBytes)
 				if config.Config.NotificationsOnAppliedAutomations {
 					notificationText := fmt.Sprintf("Automations applied to copied text:\n\n[%s]\n->[%s]\n\n", text, newText)
 					if urlCleaned {

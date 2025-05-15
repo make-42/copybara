@@ -18,12 +18,7 @@
 
       goDeps = with pkgs; [
         go
-        xorg.libX11
-        xorg.libXfixes
-        xorg.libXrandr
-        xorg.libXrender
-        xorg.libXtst
-        xorg.libXi
+        wl-clipboard
       ];
     in {
       devShell = pkgs.mkShell {
