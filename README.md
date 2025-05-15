@@ -13,6 +13,10 @@ https://github.com/user-attachments/assets/3e1e7432-ca74-4f23-a031-af9100b51a9c
  - Ability to toggle it on and off by running `copybara --toggle` (so that it can be keybound)
  - More to come
 
+## Install
+There's a Nix flake for this project in this repository for easy installation.
+And there is also an AUR package for Arch Linux users: `ontake-copybara-git`
+
 ## Config
 Configuration files are located at `~/.config/ontake/copybara/config.yml`
 An example configuration file is created on first launch.
@@ -96,5 +100,3 @@ extraregexrules:
     replacewith: https://fxtwitter.com
 ```
 
-## Nix Flake
-There's a Nix flake for this project in this repository for easy installation.
