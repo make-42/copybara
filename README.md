@@ -14,8 +14,12 @@ https://github.com/user-attachments/assets/3e1e7432-ca74-4f23-a031-af9100b51a9c
  - More to come
 
 ## Install
+### Nix/NixOS
 There's a Nix flake for this project in this repository for easy installation.
-And there is also an AUR package for Arch Linux users: `ontake-copybara-git`
+
+You can even try `copybara` out by running `nix run github:make-42/copybara`
+### Arch
+There is also an AUR package for Arch Linux users: `ontake-copybara-git`
 
 ## Config
 Configuration files are located at `~/.config/ontake/copybara/config.yml`
