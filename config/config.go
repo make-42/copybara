@@ -34,9 +34,17 @@ var DefaultConfig = ConfigS{
 			ReplaceWith: "https://fxtwitter.com",
 		},
 	},
-	ExtraURLCleaningRulesAndOverrides: map[string]urlclean.Provider{"exampleoverride": urlclean.ClearURLsRules.Providers["amazon"]},
-	EnableRegexAutomations:            true,
-	EnableURLCleaning:                 true,
+	ExtraURLCleaningRulesAndOverrides: map[string]urlclean.Provider{"exampleoverride": urlclean.Provider{
+		URLPattern:        urlclean.ClearURLsRules.Providers["amazon"].URLPattern,
+		CompleteProvider:  urlclean.ClearURLsRules.Providers["amazon"].CompleteProvider,
+		Rules:             urlclean.ClearURLsRules.Providers["amazon"].Rules,
+		ReferralMarketing: urlclean.ClearURLsRules.Providers["amazon"].ReferralMarketing,
+		Exceptions:        urlclean.ClearURLsRules.Providers["amazon"].Exceptions,
+		RawRules:          urlclean.ClearURLsRules.Providers["amazon"].RawRules,
+		Redirections:      urlclean.ClearURLsRules.Providers["amazon"].Redirections,
+	}},
+	EnableRegexAutomations: true,
+	EnableURLCleaning:      true,
 }
 
 var Config ConfigS

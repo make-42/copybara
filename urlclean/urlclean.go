@@ -16,7 +16,6 @@ type Provider struct {
 	Exceptions        []string
 	RawRules          []string
 	Redirections      []string
-	ForceRedirection  bool
 }
 
 type URLRules struct {
@@ -42,7 +41,7 @@ func CleanWithProvider(provider Provider, stringToClean string) (string, bool) {
 	parsedURL, _ := url.Parse(stringToClean)
 	query := parsedURL.Query()
 	for key := range query {
-		for _, list := range [][]string{provider.Rules, provider.ReferralMarketing} {
+		for _, list := range [][]string{provider.Rules, provider.ReferralMarketing, provider.Redirections} {
 			for _, rule := range list {
 				re := regexp.MustCompile("(?i)^" + rule + "$")
 				if re.MatchString(key) {
