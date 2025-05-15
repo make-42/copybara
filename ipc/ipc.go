@@ -48,7 +48,7 @@ func Init() {
 		}
 		c.String(http.StatusOK, fmt.Sprintf("OK"))
 	})
-	if _, err := os.Stat(socketName); errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Stat(socketName); !errors.Is(err, os.ErrNotExist) {
 		err := os.Remove(socketName)
 		utils.CheckError(err)
 	}
