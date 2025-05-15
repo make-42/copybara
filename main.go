@@ -23,7 +23,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	ipc.Init()
+	go ipc.Init()
 	urlclean.Init()
 	config.Init()
 	listener.ListenerThread()
