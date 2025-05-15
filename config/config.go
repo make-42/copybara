@@ -34,7 +34,7 @@ var DefaultConfig = ConfigS{
 			ReplaceWith: "https://fxtwitter.com",
 		},
 	},
-	ExtraURLCleaningRulesAndOverrides: map[string]urlclean.Provider{"exampleoverride": urlclean.ClearURLsRules.Providers["amazon search"]},
+	ExtraURLCleaningRulesAndOverrides: map[string]urlclean.Provider{"exampleoverride": urlclean.ClearURLsRules.Providers["amazon"]},
 	EnableRegexAutomations:            true,
 	EnableURLCleaning:                 true,
 }
