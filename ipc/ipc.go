@@ -1,14 +1,18 @@
 package ipc
 
 import (
+	"context"
 	"copybara/notifications"
 	"copybara/utils"
+	"fmt"
+	"net"
+	"net/http"
 	"sync"
 
-	ipc "github.com/james-barrow/golang-ipc"
+	"github.com/gin-gonic/gin"
 )
 
-const socketName = "copybaraclipboardautomationsocket"
+const socketName = "/tmp/copybaraclipboardautomationsocket.sock"
 
 type SafeBool struct {
 	mu sync.Mutex
@@ -30,42 +34,37 @@ func (c *SafeBool) Value() bool {
 }
 
 func Init() {
-	s, err := ipc.StartServer(socketName, nil)
+	router := gin.Default()
+
+	router.GET("/toggle", func(c *gin.Context) {
+		IsCopybaraEnabled.Toggle()
+		if IsCopybaraEnabled.Value() {
+			notifications.SendNotification("Toggled on", "list-add")
+		} else {
+			notifications.SendNotification("Toggled off", "list-remove")
+		}
+		c.String(http.StatusOK, fmt.Sprintf("OK"))
+	})
+
+	listener, err := net.Listen("unix", socketName)
 	utils.CheckError(err)
 
-	for {
-		message, _ := s.Read()
-		if string(message.Data) == "t" {
-			s.Write(1, []byte("t"))
-			IsCopybaraEnabled.Toggle()
-			if IsCopybaraEnabled.Value() {
-				notifications.SendNotification("Toggled on", "list-add")
-			} else {
-				notifications.SendNotification("Toggled off", "list-remove")
-			}
-		}
-	}
-
+	http.Serve(listener, router)
 }
 
 func SendToggleCommand() {
-	c, err := ipc.StartClient(socketName, nil)
+	conn, err := net.Dial("unix", socketName)
 	utils.CheckError(err)
-	for {
-		message, err := c.Read()
-		utils.CheckError(err)
-		if message.MsgType == -1 {
-			if c.Status() == "Connected" {
-				err = c.Write(1, []byte("t"))
-				utils.CheckError(err)
-			}
-		} else {
-			if string(message.Data) == "t" {
-				c.Close()
-				return
-			}
-		}
 
+	client := http.Client{
+		Transport: &http.Transport{
+			DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+				return conn, nil
+			},
+		},
 	}
 
+	resp, err := client.Get("http://unix/toggle")
+	utils.CheckError(err)
+	resp.Body.Close()
 }
