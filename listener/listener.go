@@ -3,6 +3,8 @@ package listener
 import (
 	"bufio"
 	"copybara/config"
+	"copybara/ipc"
+	"copybara/notifications"
 	"copybara/regex"
 	"copybara/urlclean"
 	"copybara/utils"
@@ -10,8 +12,6 @@ import (
 	"os/exec"
 	"sync"
 	"time"
-
-	notify "github.com/TheCreeper/go-notify"
 )
 
 var ListenerInterval = 100 * (time.Millisecond)
@@ -46,36 +46,36 @@ func ListenerThread() {
 	scanner := bufio.NewScanner(stdout)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
-		textBytes, err := exec.Command("wl-paste").Output()
-		text := string(textBytes)
-		text = text[:len(text)-1] // Strip last character that corresponds to a newline
-		utils.CheckError(err)
-		if text != OldText.Value() {
-			OldText.Set(text)
-			newText := text
-			urlCleaned := false
-			regexReplaced := false
-			if config.Config.EnableURLCleaning {
-				newText, urlCleaned = urlclean.CleanURLs(newText)
-			}
-			if config.Config.EnableRegexAutomations {
-				newText, regexReplaced = regex.Clean(newText)
-			}
-			OldText.Set(newText)
-			if urlCleaned || regexReplaced {
-				err := exec.Command("wl-copy", newText).Run()
-				utils.CheckError(err)
-				if config.Config.NotificationsOnAppliedAutomations {
-					notificationText := fmt.Sprintf("Automations applied to copied text:\n\n[%s]\n->[%s]\n\n", text, newText)
-					if urlCleaned {
-						notificationText += "[URL]"
+		if ipc.IsCopybaraEnabled.Value() {
+			textBytes, err := exec.Command("wl-paste").Output()
+			text := string(textBytes)
+			text = text[:len(text)-1] // Strip last character that corresponds to a newline
+			utils.CheckError(err)
+			if text != OldText.Value() {
+				OldText.Set(text)
+				newText := text
+				urlCleaned := false
+				regexReplaced := false
+				if config.Config.EnableURLCleaning {
+					newText, urlCleaned = urlclean.CleanURLs(newText)
+				}
+				if config.Config.EnableRegexAutomations {
+					newText, regexReplaced = regex.Clean(newText)
+				}
+				OldText.Set(newText)
+				if urlCleaned || regexReplaced {
+					err := exec.Command("wl-copy", newText).Run()
+					utils.CheckError(err)
+					if config.Config.NotificationsOnAppliedAutomations {
+						notificationText := fmt.Sprintf("Automations applied to copied text:\n\n[%s]\n->[%s]\n\n", text, newText)
+						if urlCleaned {
+							notificationText += "[URL]"
+						}
+						if regexReplaced {
+							notificationText += "[REGEX]"
+						}
+						notifications.SendNotification(notificationText, "edit-find-replace")
 					}
-					if regexReplaced {
-						notificationText += "[REGEX]"
-					}
-					ntf := notify.NewNotification("Copybara ₍ᐢ•(ܫ)•ᐢ₎", notificationText)
-					ntf.AppIcon = "edit-find-replace"
-					ntf.Show()
 				}
 			}
 		}
