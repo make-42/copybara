@@ -48,9 +48,11 @@ func ListenerThread() {
 	for scanner.Scan() {
 		if ipc.IsCopybaraEnabled.Value() {
 			textBytes, err := exec.Command("wl-paste").Output()
-			text := string(textBytes)
-			text = text[:len(text)-1] // Strip last character that corresponds to a newline
 			utils.CheckError(err)
+			text := string(textBytes)
+			if len(text) != 0 {
+				text = text[:len(text)-1] // Strip last character that corresponds to a newline
+			}
 			if text != OldText.Value() {
 				OldText.Set(text)
 				newText := text
