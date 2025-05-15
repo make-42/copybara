@@ -2,6 +2,11 @@
 
 A **Wayland** clipboard automation tool for cleaning URLs by removing tracking query parameters and applying other regex rules like replacing links for twitter/instagram to fix embeds.
 
+(this demo shows copybara in action as well as its toggle function)
+
+https://github.com/user-attachments/assets/3e1e7432-ca74-4f23-a031-af9100b51a9c
+
+
 ## Features
  - Remove tracking in URLs
  - Custom regex rules
