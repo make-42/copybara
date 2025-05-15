@@ -67,12 +67,12 @@ func ListenerThread() {
 					err := exec.Command("wl-copy", newText).Run()
 					utils.CheckError(err)
 					if config.Config.NotificationsOnAppliedAutomations {
-						notificationText := fmt.Sprintf("Automations applied to copied text:\n\n[%s]\n->[%s]\n\n", text, newText)
+						notificationText := fmt.Sprintf("Automations applied to copied text:\n\n[%s]\n→ [%s]\n\n", text, newText)
 						if urlCleaned {
-							notificationText += "[URL]"
+							notificationText += "[URL] "
 						}
 						if regexReplaced {
-							notificationText += "[REGEX]"
+							notificationText += "[REGEX] "
 						}
 						notifications.SendNotification(notificationText, "edit-find-replace")
 					}
