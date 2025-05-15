@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"os"
 	"sync"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +35,8 @@ func (c *SafeBool) Value() bool {
 }
 
 func Init() {
-	router := gin.Default()
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
 
 	router.GET("/toggle", func(c *gin.Context) {
 		IsCopybaraEnabled.Toggle()
@@ -45,7 +47,8 @@ func Init() {
 		}
 		c.String(http.StatusOK, fmt.Sprintf("OK"))
 	})
-
+	err := os.Remove(socketName)
+	utils.CheckError(err)
 	listener, err := net.Listen("unix", socketName)
 	utils.CheckError(err)
 
