@@ -5,10 +5,8 @@ A **Wayland** clipboard automation tool for cleaning URLs by removing tracking q
 ## Features
  - Remove tracking in URLs
  - Custom regex rules
- - (Soon: ability to toggle automations with [IPC](https://pkg.go.dev/github.com/james-barrow/golang-ipc))
+ - Ability to toggle it on and off by running `copybara --toggle` (so that it can be keybound)
  - More to come
-
-
 
 ## Config
 Configuration files are located at `~/.config/ontake/copybara/config.yml`
