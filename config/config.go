@@ -34,17 +34,9 @@ var DefaultConfig = ConfigS{
 			ReplaceWith: "https://fxtwitter.com",
 		},
 	},
-	ExtraURLCleaningRulesAndOverrides: map[string]urlclean.Provider{"exampleoverride": urlclean.Provider{
-		URLPattern:        urlclean.ClearURLsRules.Providers["amazon"].URLPattern,
-		CompleteProvider:  urlclean.ClearURLsRules.Providers["amazon"].CompleteProvider,
-		Rules:             urlclean.ClearURLsRules.Providers["amazon"].Rules,
-		ReferralMarketing: urlclean.ClearURLsRules.Providers["amazon"].ReferralMarketing,
-		Exceptions:        urlclean.ClearURLsRules.Providers["amazon"].Exceptions,
-		RawRules:          urlclean.ClearURLsRules.Providers["amazon"].RawRules,
-		Redirections:      urlclean.ClearURLsRules.Providers["amazon"].Redirections,
-	}},
-	EnableRegexAutomations: true,
-	EnableURLCleaning:      true,
+	ExtraURLCleaningRulesAndOverrides: make(map[string]urlclean.Provider),
+	EnableRegexAutomations:            true,
+	EnableURLCleaning:                 true,
 }
 
 var Config ConfigS
@@ -62,6 +54,16 @@ func Init() {
 		fh, err := os.Create(configFile)
 		utils.CheckError(err)
 		defer fh.Close()
+
+		DefaultConfig.ExtraURLCleaningRulesAndOverrides["exampleoverride"] = urlclean.Provider{
+			URLPattern:        urlclean.ClearURLsRules.Providers["google"].URLPattern,
+			CompleteProvider:  urlclean.ClearURLsRules.Providers["google"].CompleteProvider,
+			Rules:             urlclean.ClearURLsRules.Providers["google"].Rules,
+			ReferralMarketing: urlclean.ClearURLsRules.Providers["google"].ReferralMarketing,
+			Exceptions:        urlclean.ClearURLsRules.Providers["google"].Exceptions,
+			RawRules:          urlclean.ClearURLsRules.Providers["google"].RawRules,
+			Redirections:      urlclean.ClearURLsRules.Providers["google"].Redirections,
+		}
 
 		encoder := yaml.NewEncoder(fh)
 		encoder.Encode(&DefaultConfig)
