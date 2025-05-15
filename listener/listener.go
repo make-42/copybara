@@ -48,6 +48,7 @@ func ListenerThread() {
 	for scanner.Scan() {
 		textBytes, err := exec.Command("wl-paste").Output()
 		text := string(textBytes)
+		text = text[:len(text)-1] // Strip last character that corresponds to a newline
 		utils.CheckError(err)
 		if text != OldText.Value() {
 			OldText.Set(text)
@@ -64,7 +65,6 @@ func ListenerThread() {
 			if urlCleaned || regexReplaced {
 				err := exec.Command("wl-copy", newText).Run()
 				utils.CheckError(err)
-				text := string(textBytes)
 				if config.Config.NotificationsOnAppliedAutomations {
 					notificationText := fmt.Sprintf("Automations applied to copied text:\n\n[%s]\n->[%s]\n\n", text, newText)
 					if urlCleaned {
