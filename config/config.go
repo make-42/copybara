@@ -30,7 +30,7 @@ var DefaultConfig = ConfigS{
 		{
 			IsURLRule:   true,
 			Pattern:     "^https?:\\/\\/(?:[a-z0-9-]+\\.)*?x\\.com",
-			Exceptions:  []string{"^https?:\\/\\/(?:[a-z0-9-]+\\.)*?x\\.com$", "^https?:\\/\\/(?:[a-z0-9-]+\\.)*?x\\.com/$"},
+			Exceptions:  []string{"^https?:\\/\\/(?:[a-z0-9-]+\\.)*?x\\.com$", "^https?:\\/\\/(?:[a-z0-9-]+\\.)*?x\\.com/$", "^https?:\\/\\/(?:[a-z0-9-]+\\.)*?x\\.com/home$"},
 			ReplaceWith: "https://fxtwitter.com",
 		},
 	},
