@@ -13,6 +13,8 @@ https://github.com/user-attachments/assets/3e1e7432-ca74-4f23-a031-af9100b51a9c
  - Ability to toggle it on and off by running `copybara --toggle` (so that it can be keybound)
  - More to come
 
+
+
 ## Install
 ### Nix/NixOS
 There's a Nix flake for this project in this repository for easy installation.
@@ -104,3 +106,30 @@ extraregexrules:
     replacewith: https://fxtwitter.com
 ```
 
+## Build
+Run
+```
+go mod download
+go build
+```
+in the root directory of the project.
+The `./copybara` file can be installed anywhere on your system.
+
+## License and LGPL Library Notice
+This project is licensed under the MIT License, with the exception of the following third-party asset:
+ - The file `./urlclean/assets/data.min.json` is derived from the [ClearURLs](https://github.com/ClearURLs/Rules), which is licensed under the [GNU Lesser General Public License (LGPL) v3](https://www.gnu.org/licenses/lgpl-3.0.html).
+###  Embedded LGPL Asset
+- This file is **embedded into the binary at compile time**.
+- In accordance with section 4 of the LGPL v3:
+  - You are permitted to modify or replace `data.min.json` under the terms of the LGPL.
+  - To support this, we provide either:
+    - **Build instructions** to allow replacing `data.min.json` before compilation, or
+    - **Object files or source code** to recompile the application with a modified version of the file.
+
+#### Rebuilding with a Modified Version
+To use a modified version of the embedded ClearURLs rules:
+
+1. Replace the `./urlclean/assets/data.min.json` file with your own modified version.
+2. Rebuild the project from source using the standard build instructions (see [Build](#build)).
+
+This ensures compliance with the LGPL’s requirements for user modification and replacement.
